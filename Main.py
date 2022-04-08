@@ -5,6 +5,7 @@ import talib
 import  pandas_ta as ta
 from Fonksiyonlar import *
 from binance.futures import Futures
+from Telegram import *
 
 
 spotClient = Client(apiKey,secretKey)
@@ -70,7 +71,7 @@ def scanner(coinList):
     while True:
         try:
             for coin in coinList:
-                data = symbolsData(coin, "5m", 500)
+                data = symbolsData(coin, "15m", 500)
                 close = data["close"]
                 low = data["low"]
                 high = data["high"]
@@ -78,11 +79,14 @@ def scanner(coinList):
                 if colorHeikinAshi(data) is True and crossOverMacd_CCI(close,low,high) is True and volumeUp(volume) is True and ema20(close) is True:
                     result.append(coin)
                     print(f"{coin}' paritesinde PUMP ALERT")
+                    telegramBotSendText(f"{coin}' paritesinde PUMP ALERT",Keys.telegramId)
+
                 """elif colorHeikinAshi(data) is False and macdCrossover(close) is False:
                     result.append(coin)
                     print(f"{coin}' paritesinde aşağı yönlü hareketlenme mevcut")"""
         except:
             pass
         print("HEPSİ TARANDI ŞİMDİ BAŞTAN TARAYACAK")
+        telegramBotSendText("HEPSİ TARANDI ŞİMDİ BAŞTAN TARAYACAK",Keys.telegramId)
 
 scanner(usdtList)
