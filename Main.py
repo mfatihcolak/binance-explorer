@@ -63,8 +63,6 @@ def symbolsData(coinName: str, period: str, limit: int):
     converted = pd.DataFrame(kline, columns=["open-time", "open", "high", "low", "close", "volume", "close-time", "qav", "not", "tbbav", "tbqav", "ignore"], dtype=float)
     return converted
 
-dataBtc = symbolsData("BTCUSDT","4h",500)
-rsi = talib.RSI(dataBtc["close"],14)
 
 def scanner(coinList):
     result = []
