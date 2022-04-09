@@ -1,4 +1,3 @@
-import talib
 import pandas as pd
 import pandas_ta as ta
 def crossover(a : list, b : list):

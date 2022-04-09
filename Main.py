@@ -1,11 +1,11 @@
 from Keys import *
 from binance.spot import Spot as Client
 import pandas as pd
-import talib
 import  pandas_ta as ta
 from Fonksiyonlar import *
 from binance.futures import Futures
 from Telegram import *
+import time
 
 
 spotClient = Client(apiKey,secretKey)
@@ -71,12 +71,13 @@ def scanner(coinList):
     while True:
         try:
             for coin in coinList:
-                data = symbolsData(coin, "15m", 500)
+                time.sleep(10)
+                data = symbolsData(coin, "1m", 500)
                 close = data["close"]
                 low = data["low"]
                 high = data["high"]
                 volume = data["volume"]
-                if colorHeikinAshi(data) is True and crossOverMacd_CCI(close,low,high) is True and volumeUp(volume) is True and ema20(close) is True:
+                if colorHeikinAshi(data) is True and crossOverMacd_CCI(close,low,high) is True :
                     result.append(coin)
                     print(f"{coin}' paritesinde PUMP ALERT")
                     telegramBotSendText(f"{coin}' paritesinde PUMP ALERT",Keys.telegramId)
@@ -87,6 +88,6 @@ def scanner(coinList):
         except:
             pass
         print("HEPSİ TARANDI ŞİMDİ BAŞTAN TARAYACAK")
-        telegramBotSendText("HEPSİ TARANDI ŞİMDİ BAŞTAN TARAYACAK",Keys.telegramId)
+
 
 scanner(usdtList)
