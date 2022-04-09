@@ -79,7 +79,7 @@ def scanner(coinList):
         try:
             for coin in coinList:
                 time.sleep(10)
-                data = symbolsData(coin, "15m", 500)
+                data = symbolsData(coin, "5m", 500)
                 close = data["close"]
                 low = data["low"]
                 high = data["high"]
@@ -88,8 +88,8 @@ def scanner(coinList):
                         emaCross(close) is True and \
                         volumeUp(volume) is True and stochRsi(close) is True:
                     result.append(coin)
-                    print(f"{coin}' paritesinde PUMP ALERT")
-                    telegramBotSendText(f"{coin}' paritesinde PUMP ALERT", Keys.telegramId)
+                    print(f"{coin}' paritesinde yükseliş dalgası tespiti!!")
+                    telegramBotSendText(f"{coin}' paritesinde yükseliş dalgası tespiti!!", Keys.telegramId)
         except:
             pass
         print("HEPSİ TARANDI ŞİMDİ BAŞTAN TARAYACAK")
