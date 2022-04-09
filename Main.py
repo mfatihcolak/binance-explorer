@@ -93,6 +93,7 @@ def scanner(coinList):
         except:
             pass
         print("HEPSİ TARANDI ŞİMDİ BAŞTAN TARAYACAK")
+        telegramBotSendText("HEPSİ TARANDI ŞİMDİ BAŞTAN TARAYACAK", Keys.telegramId)
 
 
 scanner(usdtList)
