@@ -79,7 +79,7 @@ def scanner(coinList):
         try:
             for coin in coinList:
                 time.sleep(10)
-                data = symbolsData(coin, "5m", 500)
+                data = symbolsData(coin, "4h", 500)
                 close = data["close"]
                 low = data["low"]
                 high = data["high"]
