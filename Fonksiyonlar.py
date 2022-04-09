@@ -1,29 +1,26 @@
 import pandas as pd
 import pandas_ta as ta
+
 def crossover(a : list, b : list):
-    oncekiKisa = a[len(a) - 3]
     kisa = a[len(a) - 2]
     simdikiKisa = a[len(a) - 1]
 
-    oncekiUzun = b[len(b) - 3]
     uzun = b[len(b) - 2]
     simdikiUzun = b[len(b) - 1]
 
-    if oncekiKisa < oncekiUzun and kisa > uzun and simdikiKisa > simdikiUzun:
+    if kisa < uzun and simdikiKisa > simdikiUzun:
         return True
     else:
         return False
 
 def crossbelow(a : list, b : list):
-    oncekiKisa = a[len(a) - 3]
     kisa = a[len(a) - 2]
     simdikiKisa = a[len(a) - 1]
 
-    oncekiUzun = b[len(b) - 3]
     uzun = b[len(b) - 2]
     simdikiUzun = b[len(b) - 1]
 
-    if oncekiKisa > oncekiUzun and kisa < uzun and simdikiKisa < simdikiUzun:
+    if kisa > uzun and simdikiKisa < simdikiUzun:
         return True
     else:
         return False
@@ -45,11 +42,12 @@ def heikinAshi(df):
 
     return heikin_ashi_df
 
-def ema20(close):
-    ema = ta.ema(close, 20)
-    if close[len(close)-1] > ema[len(ema)-1]:
+def emaCross(close):
+    emaSlow = ta.ema(close, 22)
+    emaFast = ta.ema(close, 5)
+    if crossover(emaFast, emaSlow) is True:
         return True
-    elif close[len(close)-1] < ema[len(ema)-1]:
+    elif crossbelow(emaFast, emaSlow) is True:
         return False
 
 def crossOverMacd_CCI(close,low,high):
@@ -76,23 +74,33 @@ def colorHeikinAshi(data):
         return False #kırmızıya dönüş
 
 def macdCrossover(close):
-    fastLength = 8
-    slowLength = 16
-    signalLength = 11
+    fastLength = 12
+    slowLength = 26
+    signalLength = 9
     fastMA = ta.ema(close, fastLength)
     slowMA = ta.ema(close, slowLength)
     macd = fastMA - slowMA
     signal = ta.sma(macd, signalLength)
-    if signal[len(signal) - 2] >= macd[len(macd) - 2] and signal[len(signal)-1] < macd[len(macd)-1]:
+    if crossover(macd, signal) is True:
         return True
-    elif signal[len(signal)-2] <= macd[len(macd)-2] and signal[len(signal)-1] > macd[len(macd)-1]:
+    elif crossbelow(macd, signal) is True:
         return False
 
 def volumeUp(vol):
     prevVolume = vol[len(vol)-2]
     nowVolume = vol[len(vol)-1]
 
-    if nowVolume > prevVolume * 2:
+    if nowVolume > prevVolume * 1.6:
         return True
     else:
         return False
+
+def stochRsi(close):
+    dataStoch = ta.stochrsi(close)
+    stochK = dataStoch["STOCHRSIk_14_14_3_3"]
+    stochD = dataStoch["STOCHRSId_14_14_3_3"]
+    if crossover(stochK, stochD) is True:
+        return True
+    elif crossbelow(stochK, stochD) is True:
+        return False
+
