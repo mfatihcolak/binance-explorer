@@ -6,8 +6,7 @@ def telegramBotSendText(botMessage,id):
     botChatId = id
     sendText = "https://api.telegram.org/bot" + botToken + "/sendMessage?chat_id=" + botChatId + "&parse_mode" \
                                                                                                  "=Markdown&text=" \
-                                                                                                + botMessage
-
+                                                                                              + botMessage
     response = requests.get(sendText)
     return response.json()
 

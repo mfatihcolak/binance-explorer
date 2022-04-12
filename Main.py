@@ -2,9 +2,10 @@ import time
 
 from binance.spot import Spot as Client
 
+import Keys
 from Fonksiyonlar import *
 from Keys import *
-from Telegram import *
+from Telegram import telegramBotSendText as telebot
 
 spotClient = Client(apiKey, secretKey)
 
@@ -88,12 +89,34 @@ def scanner(coinList):
                         emaCross(close) is True and \
                         volumeUp(volume) is True and stochRsi(close) is True:
                     result.append(coin)
-                    print(f"{coin}' paritesinde yükseliş dalgası tespiti!!")
-                    telegramBotSendText(f"{coin}' paritesinde yükseliş dalgası tespiti!!", Keys.telegramId)
+                    print(f"{coin} paritesinde yükseliş dalgası tespiti!!")
+                    telebot(f"{coin} paritesinde yükseliş dalgası tespiti!!!",telegramGroupId)
+                    for i in result:
+                        direnc = []
+                        destek = []
+                        data = symbolsData(i, "4h", 250)
+                        high = data["high"]
+                        low = data["low"]
+                        close = data["close"]
+                        anlikFiyat = close[len(close) - 1]
+                        print("Anlık Fiyat = ", anlikFiyat)
+                        telebot(f"Anlık Fiyat = {anlikFiyat}", Keys.telegramGroupId)
+                        for i in myFibonacci(high, low):
+                            if i > anlikFiyat:
+                                direnc.append(i)
+                            elif i < anlikFiyat:
+                                destek.append(i)
+                        print("Önündeki ilk direnç = ", direnc[0])
+                        print("Destek Noktaları = ", destek)
+                        telebot(f"Önündeki ilk direnç = {direnc[0]}", Keys.telegramGroupId)
+                        telebot(f"Destek Noktaları  = {destek}", Keys.telegramGroupId)
+                        destek.clear()
+                        result.clear()
+                        break
         except:
             pass
         print("HEPSİ TARANDI ŞİMDİ BAŞTAN TARAYACAK")
-        telegramBotSendText("HEPSİ TARANDI ŞİMDİ BAŞTAN TARAYACAK", Keys.telegramId)
-
+        telebot("HEPSİ TARANDI ŞİMDİ BAŞTAN TARAYACAK", Keys.telegramGroupId)
+        result.clear()
 
 scanner(usdtList)

@@ -104,3 +104,16 @@ def stochRsi(close):
     elif crossbelow(stochK, stochD) is True:
         return False
 
+def myFibonacci(high,low):
+    maxPrice = high.max()
+    minPrice = low.min()
+    difference = maxPrice - minPrice
+
+    levelOne = maxPrice - difference * 1
+    levelTwo = maxPrice - difference * 0.786
+    levelThree = maxPrice - difference * 0.618
+    levelFour = maxPrice - difference * 0.5
+    levelFive = maxPrice - difference * 0.382
+    levelSix = maxPrice - difference * 0.236
+    levelSeven = maxPrice - difference * 0
+    return levelOne, levelTwo, levelThree, levelFour, levelFive, levelSix, levelSeven
