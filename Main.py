@@ -1,7 +1,5 @@
 import time
-
 from binance.spot import Spot as Client
-
 import Keys
 from Fonksiyonlar import *
 from Keys import *
@@ -58,7 +56,7 @@ usdtList = []
 btcList = []
 ethList = []
 for coin in getAllSymbols():
-    if "USDT" in coin and "UP" not in coin and "DOWN" not in coin:
+    if "USDT" in coin and "UP" not in coin and "DOWN" not in coin and "ERDUSDT" not in coin and "BCCUSDT" not in coin:
         usdtList.append(coin)
     elif "BTC" in coin:
         btcList.append(coin)
@@ -77,46 +75,44 @@ def symbolsData(coinName: str, period: str, limit: int):
 def scanner(coinList):
     result = []
     while True:
-        try:
-            for coin in coinList:
-                time.sleep(10)
-                data = symbolsData(coin, "4h", 500)
-                close = data["close"]
-                low = data["low"]
-                high = data["high"]
-                volume = data["volume"]
-                if macdCrossover(close) is True and \
-                        emaCross(close) is True and \
-                        volumeUp(volume) is True and stochRsi(close) is True:
-                    result.append(coin)
-                    print(f"{coin} paritesinde yükseliş dalgası tespiti!!")
-                    telebot(f"{coin} paritesinde yükseliş dalgası tespiti!!!",telegramGroupId)
-                    for i in result:
-                        direnc = []
-                        destek = []
-                        data = symbolsData(i, "4h", 250)
-                        high = data["high"]
-                        low = data["low"]
-                        close = data["close"]
-                        anlikFiyat = close[len(close) - 1]
-                        print("Anlık Fiyat = ", anlikFiyat)
-                        telebot(f"Anlık Fiyat = {anlikFiyat}", Keys.telegramGroupId)
-                        for i in myFibonacci(high, low):
-                            if i > anlikFiyat:
-                                direnc.append(i)
-                            elif i < anlikFiyat:
-                                destek.append(i)
-                        print("Önündeki ilk direnç = ", direnc[0])
-                        print("Destek Noktaları = ", destek)
-                        telebot(f"Önündeki ilk direnç = {direnc[0]}", Keys.telegramGroupId)
-                        telebot(f"Destek Noktaları  = {destek}", Keys.telegramGroupId)
-                        destek.clear()
-                        result.clear()
-                        break
-        except:
-            pass
+        for coin in coinList:
+            time.sleep(5)
+            data = symbolsData(coin, "4h", 500)
+            close = data["close"]
+            low = data["low"]
+            high = data["high"]
+            volume = data["volume"]
+            if ema20(close) is True and T3TillsonSinyal(T3TillsonIndicatorHesaplama(close, high, low)) is True and volumeUp(volume) is True:
+                result.append(coin)
+                print(f"{coin} paritesinde yükseliş dalgası tespiti!!")
+                telebot(f"{coin} paritesinde yükseliş dalgası tespiti!!!", telegramGroupId)
+                for i in result:
+                    direnc = []
+                    destek = []
+                    data = symbolsData(i, "4h", 250)
+                    high = data["high"]
+                    low = data["low"]
+                    close = data["close"]
+                    anlikFiyat = close[len(close) - 1]
+                    print("Anlık Fiyat = ", anlikFiyat)
+                    telebot(f"Anlık Fiyat = {anlikFiyat}", Keys.telegramGroupId)
+                    for i in myFibonacci(high, low):
+                        if i > anlikFiyat:
+                            direnc.append(i)
+                        if i < anlikFiyat:
+                            destek.append(i)
+                    direncVarMi(direnc)
+                    destekVarMi(destek)
+                    telebot(f"Önündeki ilk direnç = {direnc[0]}", Keys.telegramGroupId)
+                    telebot(f"Destek Noktaları  = {destek}", Keys.telegramGroupId)
+                    destek.clear()
+                    result.clear()
+                    break
+
         print("HEPSİ TARANDI ŞİMDİ BAŞTAN TARAYACAK")
         telebot("HEPSİ TARANDI ŞİMDİ BAŞTAN TARAYACAK", Keys.telegramGroupId)
         result.clear()
 
 scanner(usdtList)
+
+

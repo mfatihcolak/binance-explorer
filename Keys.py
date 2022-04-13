@@ -1,5 +1,5 @@
-apiKey = "lSgYpGsiL35Zdpdbe9NvkZrWNUPMPFbuRqklTR9TVfhyTT1HrV282gZmdTFPDtUG"
-secretKey = "P7WVkDXlVkHtOxUPQscLx93JP7KSGrqIdontslWkWl0MaTDIRU7qLnCPv9wm58hW"
+apiKey = "CnLNarMnazevhIWwWWbEFLdgo75xUln5KIT7GFQPBBjhJDesMbHixBm7rpTV262z"
+secretKey = "iCpCGbuw5wtPg3xnpyBA01khz6XvBI03CCWqcrDnXd0QwEg0oQz2NshaQtjoS5z1"
 
 telegramToken= "5277890297:AAGthoddwfdibH1ELNQMuMg7qasLVvoKtNg"
 telegramId = "908516722"

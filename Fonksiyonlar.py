@@ -117,3 +117,56 @@ def myFibonacci(high,low):
     levelSix = maxPrice - difference * 0.236
     levelSeven = maxPrice - difference * 0
     return levelOne, levelTwo, levelThree, levelFour, levelFive, levelSix, levelSeven
+
+def T3TillsonIndicatorHesaplama(close_array, high_array, low_array, volume_factor=0.7, t3Length=8):
+    ema_first_input = (high_array + low_array + 2 * close_array) / 4
+
+    e1 = ta.ema(ema_first_input, t3Length)
+    e2 = ta.ema(e1, t3Length)
+    e3 = ta.ema(e2, t3Length)
+    e4 = ta.ema(e3, t3Length)
+    e5 = ta.ema(e4, t3Length)
+    e6 = ta.ema(e5, t3Length)
+
+    c1 = -1 * volume_factor * volume_factor * volume_factor
+    c2 = 3 * volume_factor * volume_factor + 3 * volume_factor * volume_factor * volume_factor
+    c3 = -6 * volume_factor * volume_factor - 3 * volume_factor - 3 * volume_factor * volume_factor * volume_factor
+    c4 = 1 + 3 * volume_factor + volume_factor * volume_factor * volume_factor + 3 * volume_factor * volume_factor
+    T3 = c1 * e6 + c2 * e5 + c3 * e4 + c4 * e3
+
+    return T3
+def T3TillsonSinyal(tillsont3):
+    t3_last = tillsont3[len(tillsont3)-1]
+    t3_previous = tillsont3[len(tillsont3)-2]
+    t3_prev_previous = tillsont3[len(tillsont3)-3]
+
+    # kırmızıdan yeşile dönüyor
+    if t3_last > t3_previous and t3_previous < t3_prev_previous:
+        return True
+
+    # yeşilden kırmızıya dönüyor
+    elif t3_last < t3_previous and t3_previous > t3_prev_previous:
+        return False
+
+def ema20(close):
+    ema = ta.ema(close, 22)
+    anlikFiyat = close[len(close)-1]
+    anlikEMA = ema[len(ema)-1]
+    if anlikFiyat > anlikEMA:
+        return True
+    elif anlikFiyat < anlikEMA:
+        return False
+    else:
+        return None
+
+def direncVarMi(a : list):
+    if a:
+        return print("Önündeki ilk direnç = ", a[0])
+    else:
+        return print("Coinin önü açık")
+
+def destekVarMi(a: list):
+    if a:
+        return print("Destek Noktaları = ", a)
+    else:
+        return print("Coinin Fibonacci Desteği Kırılmış")
