@@ -75,40 +75,42 @@ def symbolsData(coinName: str, period: str, limit: int):
 def scanner(coinList):
     result = []
     while True:
-        for coin in coinList:
-            time.sleep(5)
-            data = symbolsData(coin, "4h", 500)
-            close = data["close"]
-            low = data["low"]
-            high = data["high"]
-            volume = data["volume"]
-            if ema20(close) is True and T3TillsonSinyal(T3TillsonIndicatorHesaplama(close, high, low)) is True and volumeUp(volume) is True:
-                result.append(coin)
-                print(f"{coin} paritesinde yükseliş dalgası tespiti!!")
-                telebot(f"{coin} paritesinde yükseliş dalgası tespiti!!!", telegramGroupId)
-                for i in result:
-                    direnc = []
-                    destek = []
-                    data = symbolsData(i, "4h", 250)
-                    high = data["high"]
-                    low = data["low"]
-                    close = data["close"]
-                    anlikFiyat = close[len(close) - 1]
-                    print("Anlık Fiyat = ", anlikFiyat)
-                    telebot(f"Anlık Fiyat = {anlikFiyat}", Keys.telegramGroupId)
-                    for i in myFibonacci(high, low):
-                        if i > anlikFiyat:
-                            direnc.append(i)
-                        if i < anlikFiyat:
-                            destek.append(i)
-                    direncVarMi(direnc)
-                    destekVarMi(destek)
-                    telebot(f"Önündeki ilk direnç = {direnc[0]}", Keys.telegramGroupId)
-                    telebot(f"Destek Noktaları  = {destek}", Keys.telegramGroupId)
-                    destek.clear()
-                    result.clear()
-                    break
-
+        try:
+            for coin in coinList:
+                time.sleep(5)
+                data = symbolsData(coin, "4h", 500)
+                close = data["close"]
+                low = data["low"]
+                high = data["high"]
+                volume = data["volume"]
+                if ema20(close) is True and T3TillsonSinyal(T3TillsonIndicatorHesaplama(close, high, low)) is True and volumeUp(volume) is True:
+                    result.append(coin)
+                    print(f"{coin} paritesinde yükseliş dalgası tespiti!!")
+                    telebot(f"{coin} paritesinde yükseliş dalgası tespiti!!!", telegramGroupId)
+                    for i in result:
+                        direnc = []
+                        destek = []
+                        data = symbolsData(i, "4h", 250)
+                        high = data["high"]
+                        low = data["low"]
+                        close = data["close"]
+                        anlikFiyat = close[len(close) - 1]
+                        print("Anlık Fiyat = ", anlikFiyat)
+                        telebot(f"Anlık Fiyat = {anlikFiyat}", Keys.telegramGroupId)
+                        for i in myFibonacci(high, low):
+                            if i > anlikFiyat:
+                                direnc.append(i)
+                            if i < anlikFiyat:
+                                destek.append(i)
+                        direncVarMi(direnc)
+                        destekVarMi(destek)
+                        telebot(f"Önündeki ilk direnç = {direnc[0]}", Keys.telegramGroupId)
+                        telebot(f"Destek Noktaları  = {destek}", Keys.telegramGroupId)
+                        destek.clear()
+                        result.clear()
+                        break
+        except:
+            pass
         print("HEPSİ TARANDI ŞİMDİ BAŞTAN TARAYACAK")
         telebot("HEPSİ TARANDI ŞİMDİ BAŞTAN TARAYACAK", Keys.telegramGroupId)
         result.clear()
