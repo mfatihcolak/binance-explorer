@@ -1,6 +1,7 @@
 import pandas as pd
 import pandas_ta as ta
 
+
 def crossover(a : list, b : list):
     kisa = a[len(a) - 2]
     simdikiKisa = a[len(a) - 1]
@@ -161,12 +162,13 @@ def ema20(close):
 
 def direncVarMi(a : list):
     if a:
-        return print("Önündeki ilk direnç = ", a[0])
+        return str(print("Önündeki ilk direnç = ", a[0]))
     else:
-        return print("Coinin önü açık")
+        return str(print("Coinin önü açık"))
 
 def destekVarMi(a: list):
     if a:
-        return print("Destek Noktaları = ", a)
+        return str(print("Destek Noktaları = ", a))
     else:
-        return print("Coinin Fibonacci Desteği Kırılmış")
+        return str(print("Coinin Fibonacci Desteği Kırılmış"))
+

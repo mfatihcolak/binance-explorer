@@ -71,6 +71,12 @@ def symbolsData(coinName: str, period: str, limit: int):
                                       "tbbav", "tbqav", "ignore"], dtype=float)
     return converted
 
+def dailyVolume(coinName : str):
+    volumeDaily = float(ticker24h(coinName)["quoteVolume"])
+    if volumeDaily > 2000000:
+        return True
+    else:
+        return False
 
 def scanner(coinList):
     result = []
@@ -78,24 +84,25 @@ def scanner(coinList):
         try:
             for coin in coinList:
                 time.sleep(5)
-                data = symbolsData(coin, "4h", 500)
+                data = symbolsData(coin, "1h", 500)
                 close = data["close"]
                 low = data["low"]
                 high = data["high"]
                 volume = data["volume"]
-                if ema20(close) is True and T3TillsonSinyal(T3TillsonIndicatorHesaplama(close, high, low)) is True and volumeUp(volume) is True:
+                if ema20(close) is True and T3TillsonSinyal(T3TillsonIndicatorHesaplama(close, high, low)) is True \
+                        and dailyVolume(coin) is True and volumeUp(volume) is True:
                     result.append(coin)
                     print(f"{coin} paritesinde yükseliş dalgası tespiti!!")
                     telebot(f"{coin} paritesinde yükseliş dalgası tespiti!!!", telegramGroupId)
                     for i in result:
                         direnc = []
                         destek = []
-                        data = symbolsData(i, "4h", 250)
+                        data = symbolsData(i, "1h", 150)
                         high = data["high"]
                         low = data["low"]
                         close = data["close"]
                         anlikFiyat = close[len(close) - 1]
-                        print("Anlık Fiyat = ", anlikFiyat)
+                        print("Anlık Fiyat = ", round(anlikFiyat,2))
                         telebot(f"Anlık Fiyat = {anlikFiyat}", Keys.telegramGroupId)
                         for i in myFibonacci(high, low):
                             if i > anlikFiyat:
@@ -107,7 +114,7 @@ def scanner(coinList):
                         telebot(f"Önündeki ilk direnç = {direnc[0]}", Keys.telegramGroupId)
                         telebot(f"Destek Noktaları  = {destek}", Keys.telegramGroupId)
                         destek.clear()
-                        result.clear()
+                        direnc.clear()
                         break
         except:
             pass
@@ -116,5 +123,7 @@ def scanner(coinList):
         result.clear()
 
 scanner(usdtList)
+
+
 
 
