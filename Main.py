@@ -83,8 +83,7 @@ def scanner(coinList):
     while True:
         try:
             for coin in coinList:
-                time.sleep(5)
-                data = symbolsData(coin, "1h", 500)
+                data = symbolsData(coin, "4h", 500)
                 close = data["close"]
                 low = data["low"]
                 high = data["high"]
@@ -97,7 +96,7 @@ def scanner(coinList):
                     for i in result:
                         direnc = []
                         destek = []
-                        data = symbolsData(i, "1h", 150)
+                        data = symbolsData(i, "4h", 250)
                         high = data["high"]
                         low = data["low"]
                         close = data["close"]
@@ -121,9 +120,5 @@ def scanner(coinList):
         print("HEPSİ TARANDI ŞİMDİ BAŞTAN TARAYACAK")
         telebot("HEPSİ TARANDI ŞİMDİ BAŞTAN TARAYACAK", Keys.telegramGroupId)
         result.clear()
-
+        time.sleep(200)
 scanner(usdtList)
-
-
-
-

@@ -142,11 +142,11 @@ def T3TillsonSinyal(tillsont3):
     t3_prev_previous = tillsont3[len(tillsont3)-3]
 
     # kırmızıdan yeşile dönüyor
-    if t3_last > t3_previous and t3_previous < t3_prev_previous:
+    if t3_last > t3_previous: #and t3_previous < t3_prev_previous:
         return True
 
     # yeşilden kırmızıya dönüyor
-    elif t3_last < t3_previous and t3_previous > t3_prev_previous:
+    elif t3_last < t3_previous: #and t3_previous > t3_prev_previous:
         return False
 
 def ema20(close):
