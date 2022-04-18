@@ -55,8 +55,12 @@ usdtList = []
 btcList = []
 ethList = []
 for coin in getAllSymbols():
-    if "USDT" in coin and "UP" not in coin and "DOWN" not in coin and "ERDUSDT" not in coin and "BCCUSDT" not in coin:
+    if "USDT" in coin and "UP" not in coin and "DOWN" not in coin and "ERDUSDT" not in coin and "BCCUSDT" not in coin: #and coin.startswith("USDT", 0,2) is True not in coin:
         usdtList.append(coin)
+        for coin in usdtList:
+            result = coin.startswith("USDT")
+            if result is True:
+                usdtList.remove(coin)
     elif "BTC" in coin:
         btcList.append(coin)
     elif "ETH" in coin:
@@ -116,4 +120,7 @@ def scanner(coinList):
         telebot("---- Hepsi Tarandı ----", Keys.telegramGroupId)
         result.clear()
         time.sleep(200)
-scanner(usdtList)
+#scanner(usdtList)
+
+for i in usdtList:
+    print(i)
