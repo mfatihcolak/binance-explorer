@@ -36,7 +36,6 @@ def ticker24h(coinName: str):
 def price(coinName: str):
     return spotClient.ticker_price(symbol=str(coinName))["price"]
 
-
 # timestamp
 def serverTime():
     return spotClient.time()["serverTime"]
@@ -91,8 +90,6 @@ def scanner(coinList):
                 if ema20(close) is True and T3TillsonSinyal(T3TillsonIndicatorHesaplama(close, high, low)) is True \
                         and dailyVolume(coin) is True and volumeUp(volume) is True:
                     result.append(coin)
-                    print(f"{coin} paritesinde yükseliş dalgası tespiti!!")
-                    telebot(f"{coin} paritesinde yükseliş dalgası tespiti!!!", telegramGroupId)
                     for i in result:
                         direnc = []
                         destek = []
@@ -101,24 +98,22 @@ def scanner(coinList):
                         low = data["low"]
                         close = data["close"]
                         anlikFiyat = close[len(close) - 1]
-                        print("Anlık Fiyat = ", round(anlikFiyat,2))
-                        telebot(f"Anlık Fiyat = {anlikFiyat}", Keys.telegramGroupId)
                         for i in myFibonacci(high, low):
                             if i > anlikFiyat:
                                 direnc.append(i)
                             if i < anlikFiyat:
                                 destek.append(i)
-                        direncVarMi(direnc)
-                        destekVarMi(destek)
-                        telebot(f"Önündeki ilk direnç = {direnc[0]}", Keys.telegramGroupId)
-                        telebot(f"Destek Noktaları  = {destek}", Keys.telegramGroupId)
+                        roundDestek = [round(x, 2) for x in destek]
+                        telebot(f"{coin} paritesinde yükseliş dalgası tespiti!!\nAnlık Fiyat = {anlikFiyat}\n"
+                                f"Önündeki ilk direnç = {round(direnc[0],2)}\n"
+                                f"Destek Noktaları  = {roundDestek}", Keys.telegramGroupId)
                         destek.clear()
                         direnc.clear()
                         break
         except:
             pass
         print("HEPSİ TARANDI ŞİMDİ BAŞTAN TARAYACAK")
-        telebot("HEPSİ TARANDI ŞİMDİ BAŞTAN TARAYACAK", Keys.telegramGroupId)
+        telebot("---- Hepsi Tarandı ----", Keys.telegramGroupId)
         result.clear()
         time.sleep(200)
 scanner(usdtList)
