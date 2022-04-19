@@ -1,6 +1,8 @@
 import pandas as pd
 import pandas_ta as ta
 import numpy as np
+from pandas_ta import df
+
 
 def crossover(a : list, b : list):
     kisa = a[len(a) - 2]
@@ -258,3 +260,24 @@ def ott(data, lentgh=2, percent=1.4, mav='VAR'):
     ott = pd.DataFrame(data['OTT'])
     ott['MAvg'] = data['MAvg']
     return ott
+
+def KDJ(close,high,low, k_,m1,m2):
+    # en yüksek
+    df['n_high'] = high.rolling(k_).max()
+    # en düşük
+    df['n_low'] = low.rolling(k_).min()
+    RSV = (close - df['n_low'].astype(float)) / (df['n_high'].astype(float) - df['n_low'].astype(float)) * 100
+    K = ta.ema(RSV, (m1*2-1));  D = ta.ema(K,(m2*2-1));  J=K*3-D*2
+    if J[len(J)-1] > K[len(K)-1] > D[len(D)-1] :
+        return True
+    else:
+        return False
+
+def rsiControl(close):
+    rsi6 = ta.rsi(close, 6)
+    rsi14 = ta.rsi(close, 14)
+
+    if rsi6[len(rsi6)-1] > rsi14[len(rsi14)-1]:
+        return True
+    elif rsi6[len(rsi6)-1] < rsi14[len(rsi14)-1]:
+        return False

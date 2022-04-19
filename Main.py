@@ -92,7 +92,8 @@ def scanner(coinList):
                 high = data["high"]
                 volume = data["volume"]
                 if ema20(close) is True and T3TillsonSinyal(T3TillsonIndicatorHesaplama(close, high, low)) is True \
-                        and dailyVolume(coin) is True and volumeUp(volume) is True:
+                        and dailyVolume(coin) is True and volumeUp(volume) is True and KDJ(close, high, low, 9, 3, 3) is True\
+                        and rsiControl(close) is True:
                     result.append(coin)
                     for i in result:
                         direnc = []
@@ -107,18 +108,18 @@ def scanner(coinList):
                                 direnc.append(i)
                             if i < anlikFiyat:
                                 destek.append(i)
-                        roundDestek = [round(x, 2) for x in destek]
+                        roundDestek = [round(x, 3) for x in destek]
                         telebot(f"{coin} paritesinde yükseliş dalgası tespiti!!\nAnlık Fiyat = {anlikFiyat}\n"
-                                f"Önündeki ilk direnç = {round(direnc[0],2)}\n"
+                                f"Önündeki ilk direnç = {round(direnc[0],3)}\n"
                                 f"Destek Noktaları  = {roundDestek}", Keys.telegramGroupId)
                         destek.clear()
                         direnc.clear()
+                        result.clear()
                         break
         except:
             pass
         print("HEPSİ TARANDI ŞİMDİ BAŞTAN TARAYACAK")
         telebot("---- Hepsi Tarandı ----", Keys.telegramGroupId)
-        result.clear()
-        time.sleep(200)
+        time.sleep(300)
 scanner(usdtList)
 
