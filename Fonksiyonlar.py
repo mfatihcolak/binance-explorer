@@ -281,3 +281,11 @@ def rsiControl(close):
         return True
     elif rsi6[len(rsi6)-1] < rsi14[len(rsi14)-1]:
         return False
+
+def ottControl(ott):
+    ottL = ott["OTT"]
+    mavgL = ott["MAvg"]
+    if mavgL[len(mavgL)-1] > ottL[len(ottL)-1]:
+        return True
+    else:
+        return False
