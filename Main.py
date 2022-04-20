@@ -92,9 +92,8 @@ def scanner(coinList):
                 high = data["high"]
                 volume = data["volume"]
                 ott(data)
-                if ema20(close) is True and T3TillsonSinyal(T3TillsonIndicatorHesaplama(close, high, low)) is True \
-                        and dailyVolume(coin) is True and volumeUp(volume) is True and KDJ(close, high, low, 9, 3, 3) is True\
-                        and rsiControl(close) is True and ottControl(ott) is True:
+                if macdCrossover(close) is True and volumeUp(volume) is True and dailyVolume(coin) is True \
+                        and stochControl(close, high, low) is True:
                     result.append(coin)
                     for i in result:
                         direnc = []

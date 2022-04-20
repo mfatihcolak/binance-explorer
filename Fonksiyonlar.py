@@ -77,9 +77,9 @@ def colorHeikinAshi(data):
         return False #kırmızıya dönüş
 
 def macdCrossover(close):
-    fastLength = 12
-    slowLength = 26
-    signalLength = 9
+    fastLength = 8
+    slowLength = 16
+    signalLength = 11
     fastMA = ta.ema(close, fastLength)
     slowMA = ta.ema(close, slowLength)
     macd = fastMA - slowMA
@@ -288,4 +288,21 @@ def ottControl(ott):
     if mavgL[len(mavgL)-1] > ottL[len(ottL)-1]:
         return True
     else:
+        return False
+
+def cciCrossover(close, high, low):
+    cci = ta.cci(high, low, close, 20)
+    anlik = cci[len(cci)-1]
+    onceki = cci[len(cci)-2]
+    if onceki < -100 and anlik > -100:
+        return True
+    elif onceki > 100 and anlik < 100:
+        return False
+
+def stochControl(close, high, low):
+    stoch = ta.stoch(high, low, close)
+    stochK = stoch["STOCHk_14_3_3"]
+    if stochK[499] > 50:
+        return True
+    elif stochK[499] < 50:
         return False
