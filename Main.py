@@ -92,8 +92,8 @@ def scanner(coinList):
                 high = data["high"]
                 volume = data["volume"]
                 ott(data)
-                if macdCrossover(close) is True and volumeUp(volume) is True and dailyVolume(coin) is True \
-                        and stochControl(close, high, low) is True:
+                if fisherTransformStrategy(high, low) is True and volumeUp(volume) is True and dailyVolume(coin) is True \
+                        and strategyIFTORSI(close) is True:
                     result.append(coin)
                     for i in result:
                         direnc = []

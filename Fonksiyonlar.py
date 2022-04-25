@@ -1,8 +1,9 @@
+import math
+
 import pandas as pd
 import pandas_ta as ta
 import numpy as np
 from pandas_ta import df
-
 
 def crossover(a : list, b : list):
     kisa = a[len(a) - 2]
@@ -306,3 +307,56 @@ def stochControl(close, high, low):
         return True
     elif stochK[499] < 50:
         return False
+
+def highest(series_a, length):
+    """
+    Returns the highest element in the given series
+    :param series_a:
+    :param length:
+    :return:
+    """
+
+    series_a = pd.Series(series_a) if isinstance(series_a, list) else series_a
+    newList = pd.Series(dtype=series_a.dtype, index=np.arange(length))
+    length = series_a.size if length > series_a.size else length
+    for x in range(length):
+        newList[x] = series_a.iloc[-1-x]
+    return newList.max()
+
+def lowest(series_a, length):
+    """
+    Returns the lowest element in the given series
+    :param series_a:
+    :param length:
+    :return:
+    """
+
+    series_a = pd.Series(series_a) if isinstance(series_a, list) else series_a
+    newList = pd.Series(dtype=series_a.dtype, index=np.arange(length))
+    length = series_a.size if length > series_a.size else length
+    for x in range(length):
+        newList[x] = series_a.iloc[-1-x]
+    return newList.min()
+
+def fisherTransformStrategy(high, low):
+    length = 10
+    fishLine = ta.fisher(high, low, length)["FISHERT_10_1"]
+    signalLine = ta.fisher(high, low, length)["FISHERTs_10_1"]
+    if crossover(fishLine, signalLine) is True:
+        return True
+    elif crossbelow(fishLine, signalLine) is True:
+        return False
+
+
+def strategyIFTORSI(close):
+    rsiLength = 5
+    wmaLength = 9
+    v1 = 0.1 * (ta.rsi(close, rsiLength) - 50)
+    v2 = ta.wma(v1, wmaLength)
+    INV = (np.exp(2*v2)-1)/(np.exp(2*v2)+1)
+
+    if INV[len(INV)-1] > -0.50:
+        return True
+    else:
+        return None
+
