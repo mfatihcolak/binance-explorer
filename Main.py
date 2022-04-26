@@ -109,9 +109,9 @@ def scanner(coinList):
                             if i < anlikFiyat:
                                 destek.append(i)
                         roundDestek = [round(x, 3) for x in destek]
-                        telebot(f"{coin} paritesinde yükseliş dalgası tespiti!!\nAnlık Fiyat = {anlikFiyat}\n"
-                                f"Önündeki ilk direnç = {round(direnc[0],3)}\n"
-                                f"Destek Noktaları  = {roundDestek}", Keys.telegramGroupId)
+                        telebot(f"🚀 {coin} paritesinde yükseliş dalgası tespiti!!\n₿ Anlık Fiyat = {anlikFiyat}\n"
+                                f"🟥 Önündeki ilk direnç = {round(direnc[0],3)}\n"
+                                f"🟩 Destek Noktaları  = {roundDestek}", Keys.telegramGroupId)
                         destek.clear()
                         direnc.clear()
                         result.clear()
