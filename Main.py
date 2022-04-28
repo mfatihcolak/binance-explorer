@@ -58,14 +58,13 @@ for coin in getAllSymbols():
     if "USDT" in coin and "UP" not in coin and "DOWN" not in coin and "ERDUSDT" not in coin and "BCCUSDT" not in coin: #and coin.startswith("USDT", 0,2) is True not in coin:
         usdtList.append(coin)
         for coin in usdtList:
-            result = coin.startswith("USDT")
+            result = coin.startswith("USDT") or coin.startswith("BUSD")
             if result is True:
                 usdtList.remove(coin)
     elif "BTC" in coin:
         btcList.append(coin)
     elif "ETH" in coin:
         ethList.append(coin)
-
 
 def symbolsData(coinName: str, period: str, limit: int):
     kline = klineData(coinName, period, limit)
@@ -109,6 +108,10 @@ def scanner(coinList):
                             if i < anlikFiyat:
                                 destek.append(i)
                         roundDestek = [round(x, 3) for x in destek]
+                        """bitcoinData = symbolsData("BTCUSDT", "4h", 250)
+                        closeBTC = bitcoinData["close"]
+                        highBTC = bitcoinData["high"]
+                        lowBTC = bitcoinData["low"]"""
                         telebot(f"🚀 {coin} paritesinde yükseliş dalgası tespiti!!\n₿ Anlık Fiyat = {anlikFiyat}\n"
                                 f"🟥 Önündeki ilk direnç = {round(direnc[0],3)}\n"
                                 f"🟩 Destek Noktaları  = {roundDestek}", Keys.telegramGroupId)
@@ -122,4 +125,3 @@ def scanner(coinList):
         telebot("---- Hepsi Tarandı ----", Keys.telegramGroupId)
         time.sleep(300)
 scanner(usdtList)
-

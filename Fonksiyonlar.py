@@ -91,10 +91,12 @@ def macdCrossover(close):
         return False
 
 def volumeUp(vol):
+    prevvvVolume = vol[len(vol)-4]
+    prevvVolume = vol[len(vol)-3]
     prevVolume = vol[len(vol)-2]
     nowVolume = vol[len(vol)-1]
 
-    if nowVolume > prevVolume * 1.6:
+    if nowVolume > (prevvvVolume + prevvVolume + prevVolume) / 3 * 1.6:
         return True
     else:
         return False
