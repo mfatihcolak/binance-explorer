@@ -50,6 +50,20 @@ def getAllSymbols():
     response = spotClient.exchange_info()
     return list(map(lambda symbol: symbol["symbol"], response["symbols"]))
 
+def lotSize(coinName: str):
+    return exchangeInfo(coinName)["symbols"][0]["filters"][2]["minQty"]
+
+def base(coinName: str):
+    return exchangeInfo(coinName)["symbols"][0]["baseAsset"]
+
+def step(coinName: str):
+    basamak = 0
+    for i in lotSize(coinName):
+        if i == str(0):
+            basamak +=1
+        elif i == str(1):
+            break
+    return basamak
 
 usdtList = []
 btcList = []
@@ -58,7 +72,7 @@ for coin in getAllSymbols():
     if "USDT" in coin and "UP" not in coin and "DOWN" not in coin and "ERDUSDT" not in coin and "BCCUSDT" not in coin: #and coin.startswith("USDT", 0,2) is True not in coin:
         usdtList.append(coin)
         for coin in usdtList:
-            result = coin.startswith("USDT") or coin.startswith("BUSD")
+            result = coin.startswith("USDT") or coin.startswith("BUSD") or coin.startswith("EUR") or coin.startswith("TUSD")
             if result is True:
                 usdtList.remove(coin)
     elif "BTC" in coin:
@@ -97,21 +111,18 @@ def scanner(coinList):
                     for i in result:
                         direnc = []
                         destek = []
-                        data = symbolsData(i, "4h", 250)
+                        data = symbolsData(i, "1d", 310)
                         high = data["high"]
                         low = data["low"]
                         close = data["close"]
                         anlikFiyat = close[len(close) - 1]
-                        for i in myFibonacci(high, low):
+                        for i in direncNoktalari(data):
                             if i > anlikFiyat:
                                 direnc.append(i)
+                        for i in destekNoktalari(data):
                             if i < anlikFiyat:
                                 destek.append(i)
                         roundDestek = [round(x, 3) for x in destek]
-                        """bitcoinData = symbolsData("BTCUSDT", "4h", 250)
-                        closeBTC = bitcoinData["close"]
-                        highBTC = bitcoinData["high"]
-                        lowBTC = bitcoinData["low"]"""
                         telebot(f"🚀 {coin} paritesinde yükseliş dalgası tespiti!!\n₿ Anlık Fiyat = {anlikFiyat}\n"
                                 f"🟥 Önündeki ilk direnç = {round(direnc[0],3)}\n"
                                 f"🟩 Destek Noktaları  = {roundDestek}", Keys.telegramGroupId)

@@ -362,3 +362,51 @@ def strategyIFTORSI(close):
     else:
         return None
 
+
+def support(df1, l, n1, n2): #n1 n2 before and after candle l
+    for i in range(l-n1+1, l+1):
+        if(df1["low"][i]>df1["low"][i-1]):
+            return 0
+    for i in range(l+1,l+n2+1):
+        if(df1["low"][i]<df1["low"][i-1]):
+            return 0
+    return 1
+
+def resistance(df1, l, n1, n2): #n1 n2 before and after candle l
+    for i in range(l-n1+1, l+1):
+        if(df1["high"][i]<df1["high"][i-1]):
+            return 0
+    for i in range(l+1,l+n2+1):
+        if(df1["high"][i]>df1["high"][i-1]):
+            return 0
+    return 1
+
+
+def detectResistanceSupport(data):
+    global destekler, direncler
+    destekler = []
+    direncler = []
+    n1 = 2
+    n2 = 2
+    for row in range(3, 300):  # len(df)-n2
+        if support(data, row, n1, n2):
+            destekler.append((row, data["low"][row]))
+        if resistance(data, row, n1, n2):
+            direncler.append((row, data["high"][row]))
+    return destekler, direncler
+
+def destekNoktalari(data):
+    global desteks
+    desteks = []
+    destek, direnc = detectResistanceSupport(data)
+    for i, tuple in enumerate(destek):
+        desteks.append(destek[i][1])
+    return desteks
+
+def direncNoktalari(data):
+    global direncs
+    direncs = []
+    destek, direnc = detectResistanceSupport(data)
+    for i, tuple in enumerate(direnc):
+        direncs.append(direnc[i][1])
+    return direncs
