@@ -143,11 +143,11 @@ def scanner(coinList):
             direncBTC = []
             if btcRSI(close4h) is True:
                 telebot(
-                    f"🟩 BTC 4 saatlik grafikte aşırı satım seviyelerinde.\nAnlık Fiyat : {anlikFiyat}\nRSI : {round(anlikRSI,2)} < 30",
+                    f"🟥 BTC 4 saatlik grafikte aşırı satım seviyelerinde.\nAnlık Fiyat : {anlikFiyat}\nRSI : {round(anlikRSI,2)} < 30",
                     Keys.telegramGroupId)
             if btcRSI(close4h) is False:
                 telebot(
-                    f"🟥BTC 4 saatlik grafikte aşırı alım seviyelerinde\nAnlık Fiyat: {anlikFiyat}\nRSI : {round(anlikRSI,2)} > 70",
+                    f"🟩 BTC 4 saatlik grafikte aşırı alım seviyelerinde\nAnlık Fiyat: {anlikFiyat}\nRSI : {round(anlikRSI,2)} > 70",
                     Keys.telegramGroupId)
             if btcEMA(close4h) is True:
                 telebot(f"🟩 BTC 4 saatlik grafikte fiyat EMA20'nin üzerine çıktı\nAnlık Fiyat: {anlikFiyat}",
