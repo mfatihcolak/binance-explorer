@@ -410,3 +410,19 @@ def direncNoktalari(data):
     for i, tuple in enumerate(direnc):
         direncs.append(direnc[i][1])
     return direncs
+
+def btcRSI(close):
+    rsi = ta.rsi(close, 14)
+    if rsi[len(rsi)-1] < 30:
+        return True
+    elif rsi[len(rsi)-1] > 70:
+        return False
+
+def btcEMA(close):
+    ema20 = ta.ema(close, 22)
+    anlikFiyat = close[len(close)-1]
+    if anlikFiyat > ema20[len(ema20)-1]:
+        return True
+    elif anlikFiyat < ema20[len(ema20)-1]:
+        return False
+

@@ -125,14 +125,51 @@ def scanner(coinList):
                         roundDestek = [round(x, 3) for x in destek]
                         telebot(f"🚀 {coin} paritesinde yükseliş dalgası tespiti!!\n₿ Anlık Fiyat = {anlikFiyat}\n"
                                 f"🟥 Önündeki ilk direnç = {round(direnc[0],3)}\n"
-                                f"🟩 Destek Noktaları  = {roundDestek}", Keys.telegramGroupId)
+                                f"🟩 Destek Noktaları  = {roundDestek.pop()}", Keys.telegramGroupId)
                         destek.clear()
                         direnc.clear()
                         result.clear()
                         break
+            data1d = symbolsData("BTCUSDT", "1d", 320)
+            data4h = symbolsData("BTCUSDT", "4h", 320)
+            close4h = data4h["close"]
+            close1d = data1d["close"]
+            high1d = data1d["high"]
+            low1d = data1d["low"]
+            anlikFiyat = close1d[len(close1d) - 1]
+            RSI = ta.rsi(close4h, 14)
+            anlikRSI = RSI[len(RSI)-1]
+            destekBTC = []
+            direncBTC = []
+            if btcRSI(close4h) is True:
+                telebot(
+                    f"🟩 BTC 4 saatlik grafikte aşırı satım seviyelerinde.\nAnlık Fiyat : {anlikFiyat}\nRSI : {round(anlikRSI,2)} < 30",
+                    Keys.telegramGroupId)
+            if btcRSI(close4h) is False:
+                telebot(
+                    f"🟥BTC 4 saatlik grafikte aşırı alım seviyelerinde\nAnlık Fiyat: {anlikFiyat}\nRSI : {round(anlikRSI,2)} > 70",
+                    Keys.telegramGroupId)
+            if btcEMA(close4h) is True:
+                telebot(f"🟩 BTC 4 saatlik grafikte fiyat EMA20'nin üzerine çıktı\nAnlık Fiyat: {anlikFiyat}",
+                        Keys.telegramGroupId)
+            if btcEMA(close4h) is False:
+                telebot(f"🟥 BTC 4 saatlik grafikte fiyat EMA20'nin altında\nAnlık Fiyat: {anlikFiyat}",
+                        Keys.telegramGroupId)
+            if fisherTransformStrategy(high1d, low1d) is True:
+                telebot(
+                    f"🟩 BTC 1 günlük grafikte, Fisher Transform İndikaöründe yukarı yönlü kesişim gerçekleşti\nAnlık Fiyat: {anlikFiyat}",
+                    Keys.telegramGroupId)
+            if fisherTransformStrategy(high1d, low1d) is False:
+                for i in destekNoktalari(data1d):
+                    if i < anlikFiyat:
+                        destekBTC.append(i)
+                telebot(
+                    f"🟥 BTC 1günlük grafikte Fisher Transform İndikatörüne Göre aşağı yönlü kesişim gerçekleşti\nAnlık Fiyat: {anlikFiyat}\nDestek : {destekBTC}",
+                    Keys.telegramGroupId)
         except:
             pass
         print("HEPSİ TARANDI ŞİMDİ BAŞTAN TARAYACAK")
         telebot("---- Hepsi Tarandı ----", Keys.telegramGroupId)
         time.sleep(300)
+
 scanner(usdtList)
