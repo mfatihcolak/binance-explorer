@@ -7,13 +7,6 @@ from Telegram import telegramBotSendText as telebot
 
 spotClient = Client(apiKey, secretKey)
 
-
-# İstenilen coinin ortalama fiyatını getirir
-def avgPrice(coinName: str):
-    coinAvg = spotClient.avg_price(symbol=str(coinName))
-    return coinAvg["price"]
-
-
 # borsa verileri
 def exchangeInfo(coinName: str = None):
     exchange = spotClient.exchange_info(symbol=str(coinName))
@@ -50,12 +43,15 @@ def getAllSymbols():
     response = spotClient.exchange_info()
     return list(map(lambda symbol: symbol["symbol"], response["symbols"]))
 
+#coinde virgülden sonra kaç basamak var gösterir
 def lotSize(coinName: str):
     return exchangeInfo(coinName)["symbols"][0]["filters"][2]["minQty"]
+
 
 def base(coinName: str):
     return exchangeInfo(coinName)["symbols"][0]["baseAsset"]
 
+#virgülden sonra kaç basamak olduğunu hesaplar
 def step(coinName: str):
     basamak = 0
     for i in lotSize(coinName):
@@ -106,7 +102,7 @@ def scanner(coinList):
                 volume = data["volume"]
                 ott(data)
                 if fisherTransformStrategy(high, low) is True and volumeUp(volume) is True and dailyVolume(coin) is True \
-                        and strategyIFTORSI(close) is True:
+                        and waveTrend(high, low, close) is True:
                     result.append(coin)
                     for i in result:
                         direnc = []
@@ -171,5 +167,5 @@ def scanner(coinList):
         print("HEPSİ TARANDI ŞİMDİ BAŞTAN TARAYACAK")
         telebot("---- Hepsi Tarandı ----", Keys.telegramGroupId)
         time.sleep(300)
-
 scanner(usdtList)
+

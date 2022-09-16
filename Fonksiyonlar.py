@@ -426,3 +426,139 @@ def btcEMA(close):
     elif anlikFiyat < ema20[len(ema20)-1]:
         return False
 
+def cakmaUstadRSI(close):
+    rsi = ta.rsi(close, 22)
+    ema = ta.ema(close, 66)
+    if crossover(rsi, ema) is True:
+        return True
+    elif crossbelow(rsi, ema) is True:
+        return False
+
+def waveTrend(high,low,close):
+    n1 = 10
+    n2 = 21
+    obLevelone = 60
+    obLeveltwo = 53
+    osLevelone = -60
+    osLeveltwo = -53
+
+    ap = ta.hlc3(high=high, low=low, close=close)
+    esa = ta.ema(ap, n1)
+    d = ta.ema(abs(ap-esa), n1)
+    ci = (ap-esa) / (0.015 * d)
+    tci = ta.ema(ci, n2)
+
+    wt1 = tci
+    wt2 = ta.sma(ci, 4)
+
+    if wt1[len(wt1)-1] < 0:
+        return True
+    elif wt1[len(wt1)-1] > 0:
+        return False
+
+
+
+
+def QQE(_candles):
+    # https://www.tradingview.com/script/tJ6vtBBe-QQE/
+    # Close = _candles.Close
+    Close = _candles["close"]
+    Fast = 2.6180
+    Slow = 4.2360
+    RSI = 14
+    SF = 2
+
+    def WiMA(src, length):
+        MA_s = [0]
+        for i, x in enumerate(src):
+            MA_s.append((x + (MA_s[i] * (length - 1))) / length)
+
+        return MA_s
+
+    def crossovers(p1, p2):
+        a = []
+        for i in range(1, min(len(p1), len(p2))):
+            if p1[i] < p2[i] and not p1[i - 1] < p2[i - 1]:
+                a.append(True)
+            elif p1[i] > p2[i] and not p1[i - 1] > p2[i - 1]:
+                a.append(True)
+            else:
+                a.append(False)
+        return a
+
+    RSIndex = ta.ema(ta.rsi(Close, RSI, fillna=0), SF, fillna=0)
+
+    TR = [0]
+    for i in range(1, len(Close)):
+        TH = RSIndex[i - 1] if RSIndex[i - 1] > RSIndex[i] else RSIndex[i]
+        TL = RSIndex[i - 1] if RSIndex[i - 1] < RSIndex[i] else RSIndex[i]
+        TR.append(TH - TL)
+
+    AtrRsi = WiMA(TR, 14)
+    SmoothedAtrRsi = WiMA(AtrRsi, 14)
+
+    # FastQQE
+    DeltaFastAtrRsi = [x * Fast for x in SmoothedAtrRsi]
+    newlongband = [x - i for x, i in zip(RSIndex, DeltaFastAtrRsi)]
+    longband = [0]
+    for i in range(1, len(RSIndex)):
+        if RSIndex[i - 1] > longband[i - 1] and RSIndex[i] > longband[i - 1]:
+            longband.append(max(longband[i - 1], newlongband[i]))
+        else:
+            longband.append(newlongband[i])
+    newshortband = [x + i for x, i in zip(RSIndex, DeltaFastAtrRsi)]
+    shortband = [0]
+    for i in range(1, len(RSIndex)):
+        if RSIndex[i - 1] < shortband[i - 1] and RSIndex[i] < shortband[i - 1]:
+            shortband.append(min(shortband[i - 1], newshortband[i]))
+        else:
+            shortband.append(newshortband[i])
+
+    trend = [0, 0]
+    shortbandCross = crossovers(RSIndex, [0] + shortband)
+    longbandCross = crossovers([0] + longband, RSIndex)
+    for i in range(1, len(shortbandCross)):
+        if shortbandCross[i] == True:
+            trend.append(1)
+        elif longbandCross[i] == True:
+            trend.append(-1)
+        else:
+            trend.append(trend[i])
+    FastAtrRsiTL = [longband[i] if trend[i] == 1 else shortband[i] for i in range(len(trend))]
+
+    # SlowQQE
+    DeltaSlowAtrRsi = [x * Slow for x in SmoothedAtrRsi]
+    newlongband1 = [x - i for x, i in zip(RSIndex, DeltaSlowAtrRsi)]
+    longband1 = [0]
+    for i in range(1, len(RSIndex)):
+        if RSIndex[i - 1] > longband1[i - 1] and RSIndex[i] > longband1[i - 1]:
+            longband1.append(max(longband1[i - 1], newlongband1[i]))
+        else:
+            longband1.append(newlongband1[i])
+
+    newshortband1 = [x + i for x, i in zip(RSIndex, DeltaSlowAtrRsi)]
+    shortband1 = [0]
+    for i in range(1, len(RSIndex)):
+        if RSIndex[i - 1] < shortband1[i - 1] and RSIndex[i] < shortband1[i - 1]:
+            shortband1.append(min(shortband1[i - 1], newshortband1[i]))
+        else:
+            shortband1.append(newshortband1[i])
+    trend1 = [0, 0]
+    shortbandCross1 = crossovers(RSIndex, [0] + shortband1)
+    longbandCross1 = crossovers([0] + longband1, RSIndex)
+    for i in range(1, len(shortbandCross1)):
+        if shortbandCross1[i] == True:
+            trend1.append(1)
+        elif longbandCross1[i] == True:
+            trend1.append(-1)
+        else:
+            trend1.append(trend1[i])
+    SlowAtrRsiTL = [longband1[i] if trend1[i] == 1 else shortband1[i] for i in range(len(trend1))]
+    return FastAtrRsiTL, SlowAtrRsiTL
+
+#RsiTL = QQE(df)
+#Fast = RsiTL[0]
+#Slow = RsiTL[1]
+#FastAtrRsiTL = RsiTL[0][i-1]
+#SlowAtrRsiTL = RsiTL[1][i-1]
+
